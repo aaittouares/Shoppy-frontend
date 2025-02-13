@@ -2,11 +2,24 @@
 
 import { Button, Link, Stack, TextField } from '@mui/material'
 import NextLink from 'next/link'
-import { useActionState } from 'react'
+import { useActionState, useState } from 'react'
 import createUser from './create-user'
 
 export default function Signup() {
   const [state, formAction] = useActionState(createUser, { error: '' })
+  //use controlled state for Textfields to keep inputs typed displayed when there is a submit error
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  })
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }))
+  }
 
   return (
     <form action={formAction} className="w-full max-w-xs">
@@ -18,6 +31,8 @@ export default function Signup() {
           type="email"
           helperText={state.error}
           error={!!state.error}
+          value={formData.email}
+          onChange={handleChange}
         />
         <TextField
           name="password"
@@ -26,6 +41,8 @@ export default function Signup() {
           type="password"
           helperText={state.error}
           error={!!state.error}
+          value={formData.password}
+          onChange={handleChange}
         />
         <Button type="submit" variant="contained">
           Signup
