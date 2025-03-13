@@ -4,6 +4,7 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import { Container, CssBaseline, ThemeProvider } from '@mui/material'
 import darkTheme from './dark.theme'
 import './globals.css'
+import Header from './header/header'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -32,7 +33,9 @@ export default function RootLayout({
       >
         <AppRouterCacheProvider>
           <ThemeProvider theme={darkTheme}>
-            <CssBaseline /> <Container> {children}</Container>
+            <CssBaseline />
+            <Header />
+            <Container> {children}</Container>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>
