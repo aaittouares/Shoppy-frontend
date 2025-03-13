@@ -15,11 +15,18 @@ import Button from '@mui/material/Button'
 import Tooltip from '@mui/material/Tooltip'
 import MenuItem from '@mui/material/MenuItem'
 import { useContext, useState, MouseEvent } from 'react'
+import Link from 'next/link'
 import { AuthContext } from '../auth/auth-context'
 import { protectedRoutes, publicRoutes } from '../common/constants/routes'
+import { useRouter } from 'next/navigation'
 
-export default function Header() {
+interface HeaderProps {
+  logout: () => Promise<void>
+}
+
+export default function Header({ logout }: HeaderProps) {
   const isAuthenticated = useContext(AuthContext)
+  const router = useRouter()
 
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null)
 
@@ -43,8 +50,8 @@ export default function Header() {
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component={Link}
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'none', md: 'flex' },
@@ -86,7 +93,13 @@ export default function Header() {
               sx={{ display: { xs: 'block', md: 'none' } }}
             >
               {pages.map((page) => (
-                <MenuItem key={page.title} onClick={handleCloseNavMenu}>
+                <MenuItem
+                  key={page.title}
+                  onClick={() => {
+                    router.push(page.path)
+                    handleCloseNavMenu()
+                  }}
+                >
                   <Typography sx={{ textAlign: 'center' }}>
                     {page.title}
                   </Typography>
@@ -101,8 +114,8 @@ export default function Header() {
           <Typography
             variant="h5"
             noWrap
-            component="a"
-            href="#app-bar-with-responsive-menu"
+            component={Link}
+            href="/"
             sx={{
               mr: 2,
               display: { xs: 'flex', md: 'none' },
@@ -116,25 +129,29 @@ export default function Header() {
           >
             Shop xs
           </Typography>
+
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
               <Button
                 key={page.title}
-                onClick={handleCloseNavMenu}
+                onClick={() => {
+                  router.push(page.path)
+                  handleCloseNavMenu()
+                }}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
                 {page.title}
               </Button>
             ))}
           </Box>
-          {isAuthenticated && <Settings />}
+          {isAuthenticated && <Settings logout={logout} />}
         </Toolbar>
       </Container>
     </AppBar>
   )
 }
 
-const Settings = () => {
+const Settings = ({ logout }: HeaderProps) => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null)
 
   const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
@@ -168,7 +185,13 @@ const Settings = () => {
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}
       >
-        <MenuItem key="Logout" onClick={handleCloseUserMenu}>
+        <MenuItem
+          key="Logout"
+          onClick={async () => {
+            await logout()
+            handleCloseUserMenu()
+          }}
+        >
           <Typography textAlign="center">Logout</Typography>
         </MenuItem>
       </Menu>

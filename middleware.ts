@@ -1,13 +1,13 @@
 import { NextRequest } from 'next/server'
+import authenticated from './app/auth/authenticated'
+import { publicRoutes } from './app/common/constants/routes'
 
-const publicRoutes = ['/auth/login', '/auth/signup']
-
-export function middleware(request: NextRequest) {
-  const auth = request.cookies.get('Authentication')?.value
-
+export async function middleware(request: NextRequest) {
   if (
-    !auth &&
-    !publicRoutes.some((route) => request.nextUrl.pathname.startsWith(route))
+    !(await authenticated()) &&
+    !publicRoutes.some((route) =>
+      request.nextUrl.pathname.startsWith(route.path)
+    )
   )
     return Response.redirect(new URL('/auth/login', request.url))
 }

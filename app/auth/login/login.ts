@@ -6,6 +6,7 @@ import { getErrorMessage } from '@/app/common/util/errors'
 import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 import { jwtDecode } from 'jwt-decode'
+import { AUTHENTICATION_COOKIE } from '../auth-cookie'
 
 export default async function login(_prevState: FormError, formData: FormData) {
   const res = await fetch(`${API_URL}/auth/login`, {
@@ -18,7 +19,9 @@ export default async function login(_prevState: FormError, formData: FormData) {
     return { error: getErrorMessage(parsedRes) }
   }
 
-  setAuthCookie(res)
+  //added await to setAuthCookie so the cookie is totally set before the redirect so we can have the authenticated
+  //server action getting the good cookie status and set the auth context correctly (ex. for the header)
+  await setAuthCookie(res)
   redirect('/')
 }
 
@@ -30,7 +33,7 @@ const setAuthCookie = async (response: Response) => {
     const cookiesStore = await cookies()
 
     cookiesStore.set({
-      name: 'Authentication',
+      name: AUTHENTICATION_COOKIE,
       value: token,
       secure: true,
       httpOnly: true,
