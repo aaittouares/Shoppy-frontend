@@ -62,7 +62,7 @@ export default function Header({ logout }: HeaderProps) {
               textDecoration: 'none',
             }}
           >
-            Shop md+
+            Shop norm
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -127,7 +127,7 @@ export default function Header({ logout }: HeaderProps) {
               textDecoration: 'none',
             }}
           >
-            Shop xs
+            Shop min
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
