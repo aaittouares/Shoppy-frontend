@@ -8,14 +8,14 @@ import createUser from './create-user'
 export default function Signup() {
   const [state, formAction] = useActionState(createUser, { error: '' })
   //use controlled state for Textfields to keep inputs typed displayed when there is a submit error
-  const [formData, setFormData] = useState({
+  const [textFieldsData, setTextFieldsData] = useState({
     email: '',
     password: '',
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData((prevState) => ({
+    setTextFieldsData((prevState) => ({
       ...prevState,
       [name]: value,
     }))
@@ -31,7 +31,7 @@ export default function Signup() {
           type="email"
           helperText={state.error}
           error={!!state.error}
-          value={formData.email}
+          value={textFieldsData.email}
           onChange={handleChange}
         />
         <TextField
@@ -41,7 +41,7 @@ export default function Signup() {
           type="password"
           helperText={state.error}
           error={!!state.error}
-          value={formData.password}
+          value={textFieldsData.password}
           onChange={handleChange}
         />
         <Button type="submit" variant="contained">

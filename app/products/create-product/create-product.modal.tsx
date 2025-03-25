@@ -1,9 +1,10 @@
 'use client'
 
-import { Box, Button, Modal, Stack, TextField } from '@mui/material'
-import { useState } from 'react'
+import { Box, Button, Modal, Stack, TextField, Typography } from '@mui/material'
+import { CSSProperties, useState } from 'react'
 import createProduct from '../actions/create-product'
 import { FormResponse } from '../../common/interfaces/form-response.interface'
+import CloudUploadIcon from '@mui/icons-material/CloudUpload'
 
 const styles = {
   position: 'absolute',
@@ -17,6 +18,18 @@ const styles = {
   p: 4,
 }
 
+const fileInputStyles: CSSProperties = {
+  clip: 'rect(0 0 0 0)',
+  clipPath: 'inset(50%)',
+  height: 1,
+  overflow: 'hidden',
+  position: 'absolute',
+  bottom: 0,
+  left: 0,
+  whiteSpace: 'nowrap',
+  width: 1,
+}
+
 interface CreateProductModalProps {
   open: boolean
   handleClose: () => void
@@ -27,8 +40,9 @@ export default function CreateProductModal({
   handleClose,
 }: CreateProductModalProps) {
   const [response, setResponse] = useState<FormResponse>()
+  const [fileName, setFileName] = useState('')
 
-  const [formData, setFormData] = useState({
+  const [textFieldsData, setTextFieldsData] = useState({
     name: '',
     description: '',
     price: '',
@@ -36,7 +50,7 @@ export default function CreateProductModal({
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target
-    setFormData((prevState) => ({
+    setTextFieldsData((prevState) => ({
       ...prevState,
       [name]: value,
     }))
@@ -44,12 +58,13 @@ export default function CreateProductModal({
 
   const onClose = () => {
     setResponse(undefined)
-    setFormData({
+    setTextFieldsData({
       name: '',
       description: '',
       price: '',
     })
     handleClose()
+    setFileName('')
   }
 
   return (
@@ -58,6 +73,8 @@ export default function CreateProductModal({
         <form
           className="w-full max-w-xs"
           action={async (formData) => {
+            // we call the server action directly here instead of using the useActionState hook
+            // since we need to wait and know for the response to close the Modal
             const response = await createProduct(formData)
             setResponse(response)
             if (!response.error) {
@@ -73,7 +90,7 @@ export default function CreateProductModal({
               required
               helperText={response?.error}
               error={!!response?.error}
-              value={formData.name}
+              value={textFieldsData.name}
               onChange={handleChange}
             />
             <TextField
@@ -83,7 +100,7 @@ export default function CreateProductModal({
               required
               helperText={response?.error}
               error={!!response?.error}
-              value={formData.description}
+              value={textFieldsData.description}
               onChange={handleChange}
             />
             <TextField
@@ -93,9 +110,25 @@ export default function CreateProductModal({
               required
               helperText={response?.error}
               error={!!response?.error}
-              value={formData.price}
+              value={textFieldsData.price}
               onChange={handleChange}
             />
+            <Button
+              component="label"
+              variant="outlined"
+              startIcon={<CloudUploadIcon />}
+            >
+              Upload File
+              <input
+                type="file"
+                name="image"
+                style={fileInputStyles}
+                onChange={(e) =>
+                  e.target.files && setFileName(e.target.files[0].name)
+                }
+              ></input>
+            </Button>
+            <Typography>{fileName}</Typography>
             <Button type="submit" variant="contained">
               Submit
             </Button>
