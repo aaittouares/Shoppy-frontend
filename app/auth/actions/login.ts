@@ -12,6 +12,8 @@ export default async function login(
   _prevState: FormResponse,
   formData: FormData
 ) {
+  //we still use the tradionnal fetch instead of our post util method in fetch.ts because we need the unparsed res
+  //for setAuthCookie
   const res = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

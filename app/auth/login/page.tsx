@@ -3,7 +3,7 @@
 import { Button, Link, Stack, TextField } from '@mui/material'
 import NextLink from 'next/link'
 import { useActionState, useState } from 'react'
-import login from './login'
+import login from '../actions/login'
 
 export default function Login() {
   const [state, formAction] = useActionState(login, { error: '' })

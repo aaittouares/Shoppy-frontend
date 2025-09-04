@@ -6,7 +6,7 @@ import './globals.css'
 import Header from './header/header'
 import Providers from './providers'
 import authenticated from './auth/authenticated'
-import logout from './auth/logout'
+import logout from './auth/actions/logout'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

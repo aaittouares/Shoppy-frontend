@@ -3,7 +3,7 @@
 import { Button, Link, Stack, TextField } from '@mui/material'
 import NextLink from 'next/link'
 import { useActionState, useState } from 'react'
-import createUser from './create-user'
+import createUser from '../actions/create-user'
 
 export default function Signup() {
   const [state, formAction] = useActionState(createUser, { error: '' })

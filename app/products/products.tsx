@@ -1,5 +1,5 @@
 import Grid from '@mui/material/Grid2'
-import getProducts from './actions/get-products'
+import getProducts from './get-products'
 import Product from './product'
 
 export default async function Products() {
