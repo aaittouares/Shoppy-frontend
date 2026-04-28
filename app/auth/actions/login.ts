@@ -10,10 +10,13 @@ import { AUTHENTICATION_COOKIE } from '../auth-cookie'
 
 export default async function login(
   _prevState: FormResponse,
-  formData: FormData
+  formData: FormData,
 ) {
   //we still use the tradionnal fetch instead of our post util method in fetch.ts because we need the unparsed res
   //for setAuthCookie
+
+  console.log(API_URL)
+
   const res = await fetch(`${API_URL}/auth/login`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
