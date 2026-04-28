@@ -6,7 +6,7 @@ import Grid from '@mui/material/Grid2'
 import Checkout from '@/app/checkout/checkout'
 
 interface SingleProductProps {
-  params: { productId: string }
+  params: Promise<{ productId: string }>
 }
 
 export default async function SingleProduct({ params }: SingleProductProps) {
